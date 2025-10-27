@@ -48,17 +48,32 @@ def fetch_yahoo_prices(tickers: List[str], start_date: str, end_date: str) -> pd
     pd.DataFrame
         DataFrame with dates as index and tickers as columns
     """
-    data = yf.download(tickers, start=start_date, end=end_date, progress=False)
+    print(f"   Downloading data for {len(tickers)} tickers...")
+    data = yf.download(tickers, start=start_date, end=end_date, progress=False, timeout=30, auto_adjust=True)
 
-    # Handle single ticker case
+    # Handle different yfinance return structures
     if len(tickers) == 1:
-        prices = data['Adj Close'].to_frame()
+        # Single ticker: data is DataFrame with columns like 'Close', 'Volume', etc.
+        prices = data[['Close']].copy()
         prices.columns = tickers
     else:
-        prices = data['Adj Close']
+        # Multiple tickers: check column structure
+        if isinstance(data.columns, pd.MultiIndex):
+            # Multi-level columns: ('Close', 'AAPL'), ('Close', 'MSFT'), etc.
+            if 'Close' in data.columns.levels[0]:
+                prices = data['Close']
+            else:
+                raise ValueError("Could not find 'Close' prices in downloaded data")
+        else:
+            # Flat columns (shouldn't happen with multiple tickers, but handle it)
+            prices = data
 
-    # Drop any columns with all NaN
+    # Drop any columns with all NaN (failed downloads)
     prices = prices.dropna(axis=1, how='all')
+
+    dropped = set(tickers) - set(prices.columns)
+    if dropped:
+        print(f"   Warning: Could not fetch data for: {', '.join(sorted(dropped))}")
 
     return prices
 
@@ -79,8 +94,10 @@ def fetch_vix(start_date: str, end_date: str) -> pd.Series:
     pd.Series
         VIX values indexed by date
     """
-    vix_data = yf.download('^VIX', start=start_date, end=end_date, progress=False)
-    return vix_data['Adj Close']
+    vix_data = yf.download('^VIX', start=start_date, end=end_date, progress=False, auto_adjust=True)
+
+    # Return Close prices (auto_adjust=True means no separate Adj Close)
+    return vix_data['Close']
 
 
 def compute_market_stress(vix: pd.Series, window: int = 252) -> pd.Series:
