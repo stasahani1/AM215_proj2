@@ -30,7 +30,7 @@ echo ""
 echo "SECTOR-SPECIFIC TESTS (NEW!):"
 echo "5. Tech sector only (10 tech stocks, ~8 minutes) 🔬"
 echo "6. Finance sector only (10 finance stocks, ~8 minutes) 💰"
-echo "7. Compare sectors (runs both #5 and #6, ~15 minutes) 📊"
+echo "7. Compare sectors with visualizations (~15 min) 📊📈 RECOMMENDED!"
 echo ""
 read -p "Enter choice (1-7): " choice
 
@@ -57,9 +57,9 @@ elif [ "$choice" = "6" ]; then
     echo "Hypothesis: Financial contagion (2008 crisis) should show highest β"
     python quick_test_finance_sector.py
 elif [ "$choice" = "7" ]; then
-    echo "Running SECTOR COMPARISON..."
-    echo "This will compare contagion dynamics across sectors"
-    python compare_sectors.py
+    echo "Running SECTOR COMPARISON WITH VISUALIZATIONS..."
+    echo "This will compare contagion dynamics across sectors and generate plots"
+    python compare_sectors_with_viz.py
 else
     echo "Invalid choice. Please run again and choose 1-7."
 fi
