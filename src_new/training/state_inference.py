@@ -24,13 +24,14 @@ class MultiStockStateInference:
         self.hmms = {}  # Dictionary of HMM per stock
         self.state_params = {}  # Dictionary of (mu, sigma) per stock per state
         
-    def fit(self, chunks: List, max_iter: int = 50) -> 'MultiStockStateInference':
+    def fit(self, chunks: List, max_iter: int = 100, min_iter: int = 10) -> 'MultiStockStateInference':
         """
         Fit HMM for each stock independently on training chunks.
         
         Args:
             chunks: List of DataChunk objects
             max_iter: Maximum iterations for HMM training
+            min_iter: Minimum iterations before convergence
             
         Returns:
             self
@@ -52,7 +53,7 @@ class MultiStockStateInference:
             returns = np.array(all_returns[ticker])
             
             hmm = GaussianHMM(n_states=self.n_states, random_state=42)
-            hmm.fit(returns, max_iter=max_iter)
+            hmm.fit(returns, max_iter=max_iter, min_iter=min_iter)
             
             self.hmms[ticker] = hmm
             

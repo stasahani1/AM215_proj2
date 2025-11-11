@@ -42,27 +42,50 @@ class GaussianHMM:
         self.params = None
         
     def _initialize_parameters(self, returns: np.ndarray) -> HMMParameters:
-        """Initialize parameters randomly."""
-        # Initialize means by dividing return range into n_states regions
+        """Initialize parameters using volatility-based clustering."""
         return_mean = returns.mean()
         return_std = returns.std()
         
-        means = np.linspace(
-            return_mean - 2*return_std,
-            return_mean + 2*return_std,
-            self.n_states
-        )
+        # Compute rolling volatility to identify regimes
+        window = min(20, len(returns) // 10)
+        rolling_vol = pd.Series(returns).rolling(window).std().fillna(return_std)
         
-        # Initialize stds as increasing (low, medium, high volatility)
-        stds = np.linspace(return_std * 0.5, return_std * 2.0, self.n_states)
+        # Initialize states based on volatility quantiles for better separation
+        vol_quantiles = np.percentile(rolling_vol, [25, 75])
         
-        # Initialize transition matrix (slight preference to stay in same state)
-        trans = np.ones((self.n_states, self.n_states)) * 0.1
-        trans += np.eye(self.n_states) * 0.7
+        # State 0 (Low vol): Use low volatility periods
+        low_vol_mask = rolling_vol < vol_quantiles[0]
+        # State 1 (Medium vol): Use medium volatility periods
+        med_vol_mask = (rolling_vol >= vol_quantiles[0]) & (rolling_vol <= vol_quantiles[1])
+        # State 2 (High vol): Use high volatility periods
+        high_vol_mask = rolling_vol > vol_quantiles[1]
+        
+        # Initialize means from each regime
+        means = np.array([
+            returns[low_vol_mask].mean() if low_vol_mask.sum() > 0 else return_mean - return_std,
+            returns[med_vol_mask].mean() if med_vol_mask.sum() > 0 else return_mean,
+            returns[high_vol_mask].mean() if high_vol_mask.sum() > 0 else return_mean + return_std
+        ])
+        
+        # Initialize stds with MORE separation (force distinct regimes)
+        stds = np.array([
+            rolling_vol[low_vol_mask].mean() if low_vol_mask.sum() > 0 else return_std * 0.3,
+            rolling_vol[med_vol_mask].mean() if med_vol_mask.sum() > 0 else return_std,
+            rolling_vol[high_vol_mask].mean() if high_vol_mask.sum() > 0 else return_std * 2.5
+        ])
+        
+        # Ensure stds are distinct and increasing
+        stds = np.sort(stds)
+        if stds[1] / stds[0] < 1.5:  # Force at least 50% difference
+            stds = np.array([stds[0], stds[0] * 1.5, stds[0] * 3.0])
+        
+        # Initialize transition matrix (strong preference to stay in same state)
+        trans = np.ones((self.n_states, self.n_states)) * 0.05
+        trans += np.eye(self.n_states) * 0.85
         trans = trans / trans.sum(axis=1, keepdims=True)
         
-        # Uniform initial probabilities
-        initial = np.ones(self.n_states) / self.n_states
+        # Initial probabilities favor susceptible state
+        initial = np.array([0.1, 0.7, 0.2])
         
         return HMMParameters(
             n_states=self.n_states,
@@ -201,7 +224,7 @@ class GaussianHMM:
         
         return log_likelihood
     
-    def fit(self, returns: np.ndarray, max_iter: int = 100, tol: float = 1e-4) -> 'GaussianHMM':
+    def fit(self, returns: np.ndarray, max_iter: int = 100, tol: float = 1e-6, min_iter: int = 5) -> 'GaussianHMM':
         """
         Fit HMM to returns using Baum-Welch algorithm.
         
@@ -209,6 +232,7 @@ class GaussianHMM:
             returns: 1D array of returns
             max_iter: Maximum number of EM iterations
             tol: Convergence tolerance
+            min_iter: Minimum iterations before allowing convergence
             
         Returns:
             self
@@ -223,8 +247,8 @@ class GaussianHMM:
             if iteration % 10 == 0:
                 print(f"    Iteration {iteration}: log-likelihood = {log_likelihood:.2f}")
             
-            # Check convergence
-            if abs(log_likelihood - prev_ll) < tol:
+            # Check convergence (but require minimum iterations)
+            if iteration >= min_iter and abs(log_likelihood - prev_ll) < tol:
                 print(f"    Converged at iteration {iteration}")
                 break
                 

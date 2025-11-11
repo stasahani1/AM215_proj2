@@ -54,7 +54,7 @@ class SIRContagionModel(StateBasedModel):
         
         # Step 1: Learn state parameters for each stock
         self.state_inference = MultiStockStateInference(self.tickers, n_states=3)
-        self.state_inference.fit(chunks, max_iter=30)
+        self.state_inference.fit(chunks, max_iter=100, min_iter=10)
         
         # Step 2: Build network if not provided
         if self.network is None:
