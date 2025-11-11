@@ -160,7 +160,14 @@ class SIRContagionModel(StateBasedModel):
         
         returns = np.log(prices / prices.shift(1)).dropna()
         states_df = self.state_inference.infer_states(returns)
-        return states_df.values
+        states = states_df.values
+        
+        # Prepend first row with default state (Susceptible = 1) to match prices length
+        if len(states) < len(prices):
+            first_row = np.ones((1, states.shape[1]), dtype=int)
+            states = np.vstack([first_row, states])
+        
+        return states
     
     def get_params(self) -> Dict:
         """Get model parameters."""
