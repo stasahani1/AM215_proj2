@@ -27,7 +27,12 @@ echo "2. Run full evaluation (10 stocks, ~30 minutes)"
 echo "3. Run OPTIMAL test - 6-week + mixed (~7 minutes) ⭐ RECOMMENDED"
 echo "4. Run OPTIMAL full evaluation (~35 minutes) ⭐⭐ BEST"
 echo ""
-read -p "Enter choice (1-4): " choice
+echo "SECTOR-SPECIFIC TESTS (NEW!):"
+echo "5. Tech sector only (10 tech stocks, ~8 minutes) 🔬"
+echo "6. Finance sector only (10 finance stocks, ~8 minutes) 💰"
+echo "7. Compare sectors (runs both #5 and #6, ~15 minutes) 📊"
+echo ""
+read -p "Enter choice (1-7): " choice
 
 echo ""
 
@@ -43,8 +48,20 @@ elif [ "$choice" = "3" ]; then
 elif [ "$choice" = "4" ]; then
     echo "Running OPTIMAL full evaluation..."
     python run_evaluation_optimal.py
+elif [ "$choice" = "5" ]; then
+    echo "Running TECH SECTOR test..."
+    echo "Hypothesis: Contagion should be strong within tech sector"
+    python quick_test_tech_sector.py
+elif [ "$choice" = "6" ]; then
+    echo "Running FINANCE SECTOR test..."
+    echo "Hypothesis: Financial contagion (2008 crisis) should show highest β"
+    python quick_test_finance_sector.py
+elif [ "$choice" = "7" ]; then
+    echo "Running SECTOR COMPARISON..."
+    echo "This will compare contagion dynamics across sectors"
+    python compare_sectors.py
 else
-    echo "Invalid choice. Please run again and choose 1-4."
+    echo "Invalid choice. Please run again and choose 1-7."
 fi
 
 echo ""
