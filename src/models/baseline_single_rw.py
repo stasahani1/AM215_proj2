@@ -1,13 +1,19 @@
 """
-Baseline 1: Single Random Walk (Geometric Brownian Motion)
-Each stock has one set of (μ, σ) parameters.
+Baseline Model 1: Single Random Walk (Geometric Brownian Motion).
+
+This module implements the simplest baseline model where each stock follows
+a single-state random walk with constant drift (μ) and volatility (σ).
+No regime switching or state transitions.
+
+The model follows the standard Geometric Brownian Motion (GBM):
+    S(t+1) = S(t) * exp(r(t))
+where r(t) ~ N(μ, σ²) are independent returns.
 """
 
 import numpy as np
 import pandas as pd
 from typing import List
-import sys
-sys.path.append('..')
+
 from models.base_model import BaseModel, SimulationResult
 
 

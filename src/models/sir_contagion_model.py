@@ -1,12 +1,31 @@
 """
-SIR Contagion Model for multi-stock price dynamics.
+SIR Contagion Model for Stock Price Dynamics.
+
+This module implements the main contribution of this work: a multi-state random
+walk model with epidemic-inspired contagion dynamics. The model combines:
+
+1. **Regime-Switching Dynamics**: Each stock has 3 states (S, I, R) with
+   distinct return distributions learned via Hidden Markov Models.
+
+2. **Network Structure**: Stocks are connected through a correlation-based
+   network, allowing crisis transmission between linked stocks.
+
+3. **Contagion Mechanism**: State transitions depend on neighbors' states,
+   following SIR (Susceptible-Infected-Recovered) epidemic dynamics:
+   - S → I: Probability increases with infected neighbors (β parameter)
+   - I → R: Recovery at rate γ
+   - R → S: Re-susceptibility at rate α
+
+The model is trained using:
+- Baum-Welch algorithm for state parameters
+- Viterbi algorithm for state inference
+- Maximum likelihood estimation for contagion parameters (β, γ, α)
 """
 
 import numpy as np
 import pandas as pd
 from typing import List, Dict
-import sys
-sys.path.append('..')
+
 from models.base_model import StateBasedModel, SimulationResult
 from training.state_inference import MultiStockStateInference
 from training.contagion_learner import ContagionLearner

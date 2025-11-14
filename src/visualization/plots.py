@@ -1,13 +1,23 @@
 """
-Visualization tools for model evaluation.
+Visualization Tools for Model Evaluation.
+
+This module provides plotting functions to visualize model performance
+and results. It includes:
+
+1. **Price Trajectories**: Actual vs simulated price paths
+2. **State Heatmaps**: Evolution of hidden states over time
+3. **Return Distributions**: Histogram comparison of actual vs simulated
+4. **Metric Comparison**: Bar charts comparing model performance
+5. **Correlation Matrices**: Cross-stock correlation structure comparison
+
+All plots are publication-ready with proper styling, labels, and legends.
 """
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from typing import List, Dict
-import sys
-sys.path.append('..')
+
 from models.base_model import SimulationResult
 
 # Set style

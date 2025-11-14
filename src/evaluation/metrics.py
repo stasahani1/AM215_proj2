@@ -1,5 +1,18 @@
 """
-Evaluation metrics for comparing model performance.
+Evaluation Metrics for Model Performance Comparison.
+
+This module provides comprehensive metrics to evaluate stock price prediction
+models across multiple dimensions:
+
+1. **Price Accuracy**: MSE, MAE, MAPE, R² for price predictions
+2. **Return Accuracy**: Return prediction metrics
+3. **Volatility Matching**: How well models capture volatility patterns
+4. **Correlation Matching**: Cross-stock correlation structure accuracy
+5. **Distribution Matching**: Wasserstein distance, JS divergence for returns
+6. **State Metrics**: State accuracy for state-based models
+
+All metrics are computed by comparing actual historical data against
+Monte Carlo simulations from the model.
 """
 
 import numpy as np
@@ -7,8 +20,7 @@ import pandas as pd
 from typing import List, Dict
 from scipy.stats import wasserstein_distance
 from scipy.spatial.distance import jensenshannon
-import sys
-sys.path.append('..')
+
 from models.base_model import SimulationResult
 
 

@@ -1,5 +1,18 @@
 """
-State inference module for learning states across multiple stocks.
+Multi-Stock State Inference Module.
+
+This module coordinates state learning across multiple stocks simultaneously.
+It trains independent HMMs for each stock and provides utilities to:
+
+1. **Fit Models**: Train HMM for each stock on historical returns
+2. **Infer States**: Use Viterbi algorithm to find most likely state sequences
+3. **Extract Parameters**: Get learned (μ, σ) for each state
+4. **Compute Statistics**: State occupancy, transition counts across stocks
+
+The module ensures consistent state interpretation across stocks by:
+- Using the same initialization strategy for all stocks
+- Sorting states by volatility (low to high)
+- Labeling states consistently (R=0, S=1, I=2)
 """
 
 import numpy as np

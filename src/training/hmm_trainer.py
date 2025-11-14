@@ -1,6 +1,24 @@
 """
-Hidden Markov Model trainer for discovering states in stock returns.
-Uses Gaussian emissions for each state.
+Hidden Markov Model (HMM) Trainer for Stock Return State Discovery.
+
+This module implements a Gaussian HMM trained using the Baum-Welch (EM) algorithm
+to discover hidden volatility regimes in stock returns.
+
+The HMM learns:
+- **State Parameters**: (μ, σ) for each of 3 states (low, medium, high volatility)
+- **Transition Matrix**: Probabilities of moving between states
+- **Initial Distribution**: Starting state probabilities
+
+Key Features:
+- Volatility-based initialization for better state separation
+- Forward-backward algorithm for state inference (Viterbi)
+- Minimum iteration requirement to prevent premature convergence
+- Forced separation of state volatilities for distinct regimes
+
+The learned states correspond to market regimes:
+- State 0 (R - Recovered): Low volatility, stable markets
+- State 1 (S - Susceptible): Normal volatility, baseline regime  
+- State 2 (I - Infected): High volatility, crisis regime
 """
 
 import numpy as np

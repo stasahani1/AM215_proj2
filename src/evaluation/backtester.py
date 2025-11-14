@@ -1,12 +1,27 @@
 """
-Backtesting framework for evaluating models on test chunks.
+Backtesting Framework for Model Evaluation.
+
+This module implements a comprehensive backtesting system for evaluating
+multiple stock price prediction models on out-of-sample test periods.
+
+The backtester:
+1. Takes trained models and test data chunks
+2. Runs Monte Carlo simulations for each model on each chunk
+3. Computes comprehensive evaluation metrics
+4. Aggregates results across all test periods
+5. Provides comparison tables and summary statistics
+
+The framework ensures fair comparison by:
+- Using identical initial conditions for all models
+- Testing on unseen (out-of-sample) data
+- Averaging over multiple simulations to reduce randomness
+- Computing metrics across all stocks simultaneously
 """
 
 import numpy as np
 import pandas as pd
 from typing import List, Dict
-import sys
-sys.path.append('..')
+
 from models.base_model import BaseModel
 from evaluation.metrics import ModelEvaluator
 

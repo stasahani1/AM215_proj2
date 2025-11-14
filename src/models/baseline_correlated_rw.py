@@ -1,14 +1,21 @@
 """
-Baseline 3: Correlated Random Walk
-Single random walk per stock but with correlated returns.
-Captures co-movement but no regime switching.
+Baseline Model 3: Correlated Random Walk.
+
+This module implements a random walk model with correlated returns across stocks.
+It captures cross-stock co-movement through a multivariate normal distribution
+but does not include regime switching.
+
+The model generates correlated returns from:
+    r(t) ~ MVN(μ, Σ)
+where μ is the mean vector and Σ is the covariance matrix learned from data.
+This allows the model to capture correlations during crisis periods without
+explicit state dynamics.
 """
 
 import numpy as np
 import pandas as pd
 from typing import List
-import sys
-sys.path.append('..')
+
 from models.base_model import BaseModel, SimulationResult
 
 

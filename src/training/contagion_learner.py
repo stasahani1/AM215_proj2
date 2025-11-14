@@ -1,5 +1,25 @@
 """
-Module for learning contagion dynamics between stocks.
+Contagion Parameter Learning Module.
+
+This module learns the SIR contagion dynamics parameters from historical
+state sequences and network structure. It estimates:
+
+1. **β (Contagion Rate)**: How infected neighbors increase S→I transition probability
+2. **γ (Recovery Rate)**: Base rate of I→R transitions
+3. **α (Re-susceptibility Rate)**: Base rate of R→S transitions
+
+The learning process:
+1. Count state transitions for each stock across all time periods
+2. For S→I transitions, track the fraction of infected neighbors
+3. Use maximum likelihood estimation (MLE) to fit parameters
+4. Validate that β > 0 indicates genuine contagion effects
+
+The contagion model follows:
+    P(S→I | neighbors) = baseline + β * (infected_fraction)
+
+where infected_fraction = (# infected neighbors) / (# total neighbors).
+A positive β indicates that infected neighbors increase infection probability,
+providing evidence of financial contagion.
 """
 
 import numpy as np

@@ -1,13 +1,22 @@
 """
-Baseline 2: Independent HMM
-Each stock has 3 states, but transitions are independent (no contagion).
+Baseline Model 2: Independent Hidden Markov Model (HMM).
+
+This module implements a multi-state model where each stock has 3 independent
+states (R, S, I) with different volatility regimes. Unlike the SIR model,
+state transitions are independent across stocks with NO contagion effects.
+
+This baseline tests whether the contagion mechanism in the SIR model provides
+value beyond simple regime-switching. Each stock's transition probabilities
+are learned from data but do not depend on neighbors' states.
+
+States are learned using the Baum-Welch algorithm and transitions follow
+a stock-specific transition matrix.
 """
 
 import numpy as np
 import pandas as pd
 from typing import List, Dict
-import sys
-sys.path.append('..')
+
 from models.base_model import StateBasedModel, SimulationResult
 from training.state_inference import MultiStockStateInference
 
