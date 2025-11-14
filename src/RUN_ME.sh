@@ -1,69 +1,145 @@
 #!/bin/bash
 
-# Activation script for SIR Contagion Model Evaluation
-# This script activates the virtual environment and runs the evaluation
+# SIR Contagion Model - Evaluation Script
+# Provides an interactive menu to run various analyses
 
 echo "=========================================="
 echo "SIR Contagion Model Evaluation"
+echo "Stock Price Prediction with Network Effects"
 echo "=========================================="
 echo ""
 
 # Navigate to project root
-cd /Users/praghav/Desktop/am215/AM215_proj2
+PROJECT_ROOT="/Users/praghav/Desktop/am215/AM215_proj2"
+cd "$PROJECT_ROOT"
+
+# Check if virtual environment exists
+if [ ! -d "venv" ]; then
+    echo "⚠️  Virtual environment not found!"
+    echo "Please create one first:"
+    echo "  python -m venv venv"
+    echo "  source venv/bin/activate"
+    echo "  pip install -r requirements.txt"
+    exit 1
+fi
 
 # Activate virtual environment
 echo "Activating virtual environment..."
 source venv/bin/activate
 
-# Navigate to src_new
-cd src_new
+# Navigate to src directory
+cd src
 
 echo ""
 echo "=========================================="
-echo "Choose an option:"
+echo "Choose an analysis to run:"
 echo "=========================================="
-echo "1. Run quick test (3 stocks, ~5 minutes)"
-echo "2. Run full evaluation (10 stocks, ~30 minutes)"
-echo "3. Run OPTIMAL test - 6-week + mixed (~7 minutes) ⭐ RECOMMENDED"
-echo "4. Run OPTIMAL full evaluation (~35 minutes) ⭐⭐ BEST"
 echo ""
-echo "SECTOR-SPECIFIC TESTS (NEW!):"
-echo "5. Tech sector only (10 tech stocks, ~8 minutes) 🔬"
-echo "6. Finance sector only (10 finance stocks, ~8 minutes) 💰"
-echo "7. Compare sectors with visualizations (~15 min) 📊📈 RECOMMENDED!"
+echo "⭐ RECOMMENDED (Quick Tests - 5-10 minutes):"
+echo "  1. Quick Test (Optimal) - 6-week chunks + mixed training"
+echo "  2. Finance Sector - Best results! (2008 + COVID crises)"
+echo "  3. Tech Sector - Compare contagion across sectors"
 echo ""
-read -p "Enter choice (1-7): " choice
+echo "📊 COMPREHENSIVE (Full Evaluations - 20-40 minutes):"
+echo "  4. Full Evaluation (Optimal) - Complete analysis"
+echo "  5. Sector Comparison - Finance vs Tech with visualizations"
+echo ""
+echo "🔬 ANALYSIS TOOLS:"
+echo "  6. Window Size Comparison - Test different time windows"
+echo "  7. Generate LaTeX Tables - For paper/report"
+echo "  8. Visualize Networks - Correlation & contagion networks"
+echo ""
+echo "  0. Exit"
+echo ""
+read -p "Enter choice (0-8): " choice
 
 echo ""
+echo "=========================================="
 
-if [ "$choice" = "1" ]; then
-    echo "Running quick test..."
-    python quick_test.py
-elif [ "$choice" = "2" ]; then
-    echo "Running full evaluation..."
-    python run_evaluation.py
-elif [ "$choice" = "3" ]; then
-    echo "Running OPTIMAL quick test (6-week chunks + mixed training)..."
-    python quick_test_optimal.py
-elif [ "$choice" = "4" ]; then
-    echo "Running OPTIMAL full evaluation..."
-    python run_evaluation_optimal.py
-elif [ "$choice" = "5" ]; then
-    echo "Running TECH SECTOR test..."
-    echo "Hypothesis: Contagion should be strong within tech sector"
-    python quick_test_tech_sector.py
-elif [ "$choice" = "6" ]; then
-    echo "Running FINANCE SECTOR test..."
-    echo "Hypothesis: Financial contagion (2008 crisis) should show highest β"
-    python quick_test_finance_sector.py
-elif [ "$choice" = "7" ]; then
-    echo "Running SECTOR COMPARISON WITH VISUALIZATIONS..."
-    echo "This will compare contagion dynamics across sectors and generate plots"
-    python compare_sectors_with_viz.py
-else
-    echo "Invalid choice. Please run again and choose 1-7."
-fi
+case $choice in
+    1)
+        echo "Running: Quick Test (Optimal Settings)"
+        echo "Configuration: 6-week chunks, mixed training, 6 stocks"
+        echo "Expected runtime: ~5-8 minutes"
+        echo "=========================================="
+        python scripts/quick_test_optimal.py
+        ;;
+    2)
+        echo "Running: Finance Sector Test"
+        echo "Stocks: JPM, BAC, WFC, GS, MS, C, BLK, SCHW, AXP, USB"
+        echo "Expected runtime: ~8-10 minutes"
+        echo "Hypothesis: Strong contagion during financial crises"
+        echo "=========================================="
+        python scripts/quick_test_finance_sector.py
+        ;;
+    3)
+        echo "Running: Tech Sector Test"
+        echo "Stocks: AAPL, MSFT, GOOGL, NVDA, META, TSLA, AVGO, ORCL, ADBE, CRM"
+        echo "Expected runtime: ~8-10 minutes"
+        echo "Hypothesis: Moderate contagion within tech"
+        echo "=========================================="
+        python scripts/quick_test_tech_sector.py
+        ;;
+    4)
+        echo "Running: Full Evaluation (Optimal)"
+        echo "Configuration: 15 years data, 50 chunks, 500 simulations"
+        echo "Expected runtime: ~30-40 minutes"
+        echo "Will generate comprehensive visualizations"
+        echo "=========================================="
+        python scripts/run_evaluation_optimal.py
+        ;;
+    5)
+        echo "Running: Sector Comparison with Visualizations"
+        echo "Compares Finance vs Tech sectors"
+        echo "Expected runtime: ~15-20 minutes"
+        echo "Generates comparative plots and metrics"
+        echo "=========================================="
+        python scripts/compare_sectors_with_viz.py
+        ;;
+    6)
+        echo "Running: Window Size Comparison"
+        echo "Tests different time window configurations"
+        echo "Expected runtime: ~20-25 minutes"
+        echo "=========================================="
+        python scripts/compare_window_sizes.py
+        ;;
+    7)
+        echo "Generating LaTeX Tables"
+        echo "Creates publication-ready tables"
+        echo "Output: project_results/latex_tables/"
+        echo "=========================================="
+        python scripts/generate_latex_tables.py
+        ;;
+    8)
+        echo "Visualizing Networks"
+        echo "Creates correlation and adjacency matrices"
+        echo "=========================================="
+        python scripts/visualize_networks.py
+        ;;
+    0)
+        echo "Exiting..."
+        exit 0
+        ;;
+    *)
+        echo "❌ Invalid choice. Please run again and choose 0-8."
+        exit 1
+        ;;
+esac
 
 echo ""
-echo "Done!"
-
+echo "=========================================="
+echo "✅ Complete!"
+echo "=========================================="
+echo ""
+echo "Results saved to:"
+echo "  • results_optimal/ - Main results"
+echo "  • results_sector_comparison/ - Sector analysis"
+echo "  • project_results/ - Publication-ready outputs"
+echo ""
+echo "Next steps:"
+echo "  • View generated PNG files for visualizations"
+echo "  • Check CSV files for detailed metrics"
+echo "  • See console output above for summary statistics"
+echo ""
+echo "For more info, see: ../README.md"
+echo "=========================================="
