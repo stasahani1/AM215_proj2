@@ -1,0 +1,19 @@
+
+\begin{table}[htbp]
+\centering
+\caption{Window Size Comparison: Impact on Model Performance}
+\label{tab:window_comparison}
+\begin{tabular}{lrrllrl}
+\toprule
+\textbf{Window Size} & \textbf{SIR MSE} & \textbf{Baseline MSE} & \textbf{Best Model} & \textbf{Improvement (\%)} & \textbf{p-value} & \textbf{Significant?} \\
+\midrule
+2-week (10 days) & 189.37 & 180.37 & Single RW & -5.0 & 0.1123 & No \\
+6-week (30 days) & 264.21 & 276.15 & Independent HMM & +4.3 & 0.5184 & No \\
+12-week (60 days) & 552.57 & 459.53 & Single RW & -20.2 & 0.0447 & Yes (worse) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Significance determined by paired t-test at $\alpha = 0.05$ level
+\end{tablenotes}
+\end{table}

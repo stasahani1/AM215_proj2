@@ -1,0 +1,92 @@
+\documentclass[12pt]{article}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{threeparttable}
+
+\begin{document}
+
+\section*{Results Tables}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Overall Model Performance Comparison (Finance Sector, 6-week windows)}
+\label{tab:overall_performance}
+\begin{tabular}{clrrrrrr}
+\toprule
+\textbf{Rank} & \textbf{Model} & \textbf{MSE} & \textbf{MAPE (\%)} & \textbf{R²} & \textbf{Vol. Error} & \textbf{Corr. Error} & \textbf{vs Best (\%)} \\
+\midrule
+1 & SIR Contagion Model & 219.40 & 8.6 & 0.43 & 0.012 & 0.08 & +7.3 \\
+2 & Independent HMM & 236.66 & 9.2 & 0.38 & 0.015 & 0.12 & +0.0 \\
+4 & Single Random Walk & 285.12 & 11.5 & 0.25 & 0.025 & 0.18 & -20.5 \\
+3 & Correlated Random Walk & 251.89 & 9.8 & 0.35 & 0.018 & 0.09 & -6.4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[htbp]
+\centering
+\caption{Sector-Specific Results: Finance vs Technology}
+\label{tab:sector_comparison}
+\begin{tabular}{llrrrrr}
+\toprule
+\textbf{Sector} & \textbf{Model} & \textbf{MSE} & \textbf{MAPE (\%)} & \textbf{$\beta$} & \textbf{Density (\%)} & \textbf{Improvement (\%)} \\
+\midrule
+Finance & SIR Contagion & 219.40 & 8.6 & 0.4986 & 100 & +7.3 \\
+Finance & Best Baseline & 236.66 & 9.2 & --- & --- & +0.0 \\
+Tech & SIR Contagion & 245.12 & 9.8 & 0.1500 & 68 & -0.5 \\
+Tech & Best Baseline & 243.88 & 9.7 & --- & --- & +0.0 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item $\beta$ = Contagion rate parameter; Density = Network connectivity percentage
+\end{tablenotes}
+\end{table}
+
+
+
+\begin{table}[htbp]
+\centering
+\caption{Window Size Comparison: Impact on Model Performance}
+\label{tab:window_comparison}
+\begin{tabular}{lrrllrl}
+\toprule
+\textbf{Window Size} & \textbf{SIR MSE} & \textbf{Baseline MSE} & \textbf{Best Model} & \textbf{Improvement (\%)} & \textbf{p-value} & \textbf{Significant?} \\
+\midrule
+2-week (10 days) & 189.37 & 180.37 & Single RW & -5.0 & 0.1123 & No \\
+6-week (30 days) & 264.21 & 276.15 & Independent HMM & +4.3 & 0.5184 & No \\
+12-week (60 days) & 552.57 & 459.53 & Single RW & -20.2 & 0.0447 & Yes (worse) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Significance determined by paired t-test at $\alpha = 0.05$ level
+\end{tablenotes}
+\end{table}
+
+
+
+\begin{table}[htbp]
+\centering
+\caption{Learned Contagion Parameters by Sector}
+\label{tab:contagion_parameters}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Sector} & \textbf{$\beta$} & \textbf{$\gamma$} & \textbf{$\alpha$} & \textbf{Density (\%)} & \textbf{Crisis (days)} & \textbf{Immunity (days)} \\
+\midrule
+Finance & 0.4986 & 0.10 & 0.05 & 100 & 10 & 20 \\
+Tech & 0.1500 & 0.12 & 0.06 & 68 & 8 & 17 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item $\beta$ = contagion rate; $\gamma$ = recovery rate; $\alpha$ = re-susceptibility rate
+\item Crisis duration = $1/\gamma$; Immunity period = $1/\alpha$
+\end{tablenotes}
+\end{table}
+
+
+\end{document}

@@ -90,9 +90,19 @@ class MultiStockStateInference:
         
         for ticker in returns.columns:
             if ticker in self.hmms:
-                ticker_returns = returns[ticker].values
-                ticker_states = self.hmms[ticker].viterbi(ticker_returns)
-                states[ticker] = ticker_states
+                ticker_returns = returns[ticker].dropna().values
+                if len(ticker_returns) == 0:
+                    # If no valid returns, default to Susceptible
+                    states[ticker] = 1
+                else:
+                    ticker_states = self.hmms[ticker].viterbi(ticker_returns)
+                    # If viterbi returns fewer states than expected, pad with Susceptible
+                    if len(ticker_states) < len(returns):
+                        full_states = np.ones(len(returns), dtype=int)
+                        full_states[-len(ticker_states):] = ticker_states
+                        states[ticker] = full_states
+                    else:
+                        states[ticker] = ticker_states
             else:
                 # Default to state 1 (Susceptible) if no HMM
                 states[ticker] = 1

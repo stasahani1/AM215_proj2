@@ -1,0 +1,19 @@
+
+\begin{table}[htbp]
+\centering
+\caption{Learned Contagion Parameters by Sector}
+\label{tab:contagion_parameters}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Sector} & \textbf{$\beta$} & \textbf{$\gamma$} & \textbf{$\alpha$} & \textbf{Density (\%)} & \textbf{Crisis (days)} & \textbf{Immunity (days)} \\
+\midrule
+Finance & 0.4986 & 0.10 & 0.05 & 100 & 10 & 20 \\
+Tech & 0.1500 & 0.12 & 0.06 & 68 & 8 & 17 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item $\beta$ = contagion rate; $\gamma$ = recovery rate; $\alpha$ = re-susceptibility rate
+\item Crisis duration = $1/\gamma$; Immunity period = $1/\alpha$
+\end{tablenotes}
+\end{table}

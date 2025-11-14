@@ -1,0 +1,16 @@
+
+\begin{table}[htbp]
+\centering
+\caption{Overall Model Performance Comparison (Finance Sector, 6-week windows)}
+\label{tab:overall_performance}
+\begin{tabular}{clrrrrrr}
+\toprule
+\textbf{Rank} & \textbf{Model} & \textbf{MSE} & \textbf{MAPE (\%)} & \textbf{R²} & \textbf{Vol. Error} & \textbf{Corr. Error} & \textbf{vs Best (\%)} \\
+\midrule
+1 & SIR Contagion Model & 219.40 & 8.6 & 0.43 & 0.012 & 0.08 & +7.3 \\
+2 & Independent HMM & 236.66 & 9.2 & 0.38 & 0.015 & 0.12 & +0.0 \\
+4 & Single Random Walk & 285.12 & 11.5 & 0.25 & 0.025 & 0.18 & -20.5 \\
+3 & Correlated Random Walk & 251.89 & 9.8 & 0.35 & 0.018 & 0.09 & -6.4 \\
+\bottomrule
+\end{tabular}
+\end{table}

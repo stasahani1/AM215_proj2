@@ -1,0 +1,20 @@
+
+\begin{table}[htbp]
+\centering
+\caption{Sector-Specific Results: Finance vs Technology}
+\label{tab:sector_comparison}
+\begin{tabular}{llrrrrr}
+\toprule
+\textbf{Sector} & \textbf{Model} & \textbf{MSE} & \textbf{MAPE (\%)} & \textbf{$\beta$} & \textbf{Density (\%)} & \textbf{Improvement (\%)} \\
+\midrule
+Finance & SIR Contagion & 219.40 & 8.6 & 0.4986 & 100 & +7.3 \\
+Finance & Best Baseline & 236.66 & 9.2 & --- & --- & +0.0 \\
+Tech & SIR Contagion & 245.12 & 9.8 & 0.1500 & 68 & -0.5 \\
+Tech & Best Baseline & 243.88 & 9.7 & --- & --- & +0.0 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item $\beta$ = Contagion rate parameter; Density = Network connectivity percentage
+\end{tablenotes}
+\end{table}
